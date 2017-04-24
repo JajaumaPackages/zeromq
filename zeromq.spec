@@ -1,11 +1,11 @@
 Name:           zeromq
-Version:        4.1.5
+Version:        4.2.1
 Release:        1%{?dist}
 Summary:        Software library for fast, message-based applications
 
 License:        LGPL
 URL:            http://zeromq.org/
-Source0:        https://github.com/zeromq/zeromq4-1/releases/download/v%{version}/zeromq-%{version}.tar.gz
+Source0:        https://github.com/zeromq/libzmq/releases/download/v%{version}/zeromq-%{version}.tar.gz
 
 BuildRequires:  pkgconfig(libsodium)
 BuildRequires:  pkgconfig(openpgm-5.2)
@@ -54,11 +54,11 @@ Summary:        Utilities shipped with %{name}
 sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
 sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 
-make %{?_smp_mflags} V=1
+make %{?_smp_mflags}
 
 
 %check
-export LD_LIBRARY_PATH=.libs
+export LD_LIBRARY_PATH=src/.libs
 make check
 
 
@@ -75,7 +75,8 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 
 
 %files
-%doc AUTHORS ChangeLog COPYING* MAINTAINERS NEWS
+%license COPYING.LESSER
+%doc AUTHORS ChangeLog NEWS
 %{_libdir}/*.so.*
 
 
@@ -92,5 +93,8 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 
 
 %changelog
+* Mon Apr 24 2017 Jajauma's Packages <jajauma@yandex.ru> - 4.2.1-1
+- Update to latest upstream release
+
 * Wed Aug 10 2016 Jajauma's Packages <jajauma@yandex.ru> - 4.1.5-1
 - Public release
