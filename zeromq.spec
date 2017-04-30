@@ -1,6 +1,6 @@
 Name:           zeromq
 Version:        4.2.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Software library for fast, message-based applications
 
 License:        LGPL
@@ -8,7 +8,6 @@ URL:            http://zeromq.org/
 Source0:        https://github.com/zeromq/libzmq/releases/download/v%{version}/zeromq-%{version}.tar.gz
 
 BuildRequires:  pkgconfig(libsodium)
-BuildRequires:  pkgconfig(openpgm-5.2)
 BuildRequires:  asciidoc
 BuildRequires:  xmlto
 
@@ -47,7 +46,6 @@ Summary:        Utilities shipped with %{name}
 %build
 %configure \
     --disable-static \
-    --with-pgm \
     --with-libsodium \
     --disable-silent-rules
 
@@ -93,6 +91,9 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 
 
 %changelog
+* Sun Apr 30 2017 Jajauma's Packages <jajauma@yandex.ru> - 4.2.1-2
+- Drop OpenPGM support (can't build under MinGW)
+
 * Mon Apr 24 2017 Jajauma's Packages <jajauma@yandex.ru> - 4.2.1-1
 - Update to latest upstream release
 
