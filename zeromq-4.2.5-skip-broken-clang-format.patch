@@ -1,9 +1,0 @@
-diff -uNr zeromq-4.2.5.orig/CMakeLists.txt zeromq-4.2.5/CMakeLists.txt
---- zeromq-4.2.5.orig/CMakeLists.txt	2018-04-04 13:33:16.586566091 +0300
-+++ zeromq-4.2.5/CMakeLists.txt	2018-04-04 13:33:34.439358888 +0300
-@@ -1292,4 +1292,4 @@
-   endif ()
- endif ()
- 
--include(ClangFormat)
-+# include(ClangFormat)

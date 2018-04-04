@@ -1,12 +1,15 @@
+%global gitdate 20180404
+%global gitversion 4.2.5
+%global gitcommit bb4fb32
+
 Name:           zeromq
-Version:        4.2.5
-Release:        2%{?dist}
+Version:        %{gitversion}
+Release:        3.git%{gitdate}.%{gitcommit}%{?dist}
 Summary:        Software library for fast, message-based applications
 
 License:        LGPLv3
 URL:            http://zeromq.org
-Source0:        https://github.com/zeromq/libzmq/releases/download/v%{version}/zeromq-%{version}.tar.gz
-Patch0:         zeromq-4.2.5-skip-broken-clang-format.patch
+Source0:        zeromq.tar.bz2
 
 BuildRequires:  pkgconfig(libsodium)
 BuildRequires:  pkgconfig(openpgm-5.2)
@@ -41,8 +44,7 @@ Summary:        Utilities shipped with %{name}
 
 
 %prep
-%setup -q
-%patch0 -p1
+%setup -q -n zeromq
 
 
 %build
@@ -100,6 +102,10 @@ rm -f %{buildroot}/usr/share/zmq/*.txt
 
 
 %changelog
+* Wed Apr 04 2018 Jajauma's Packages <jajauma@yandex.ru> - 4.2.5-3
+- Update to latest git snapshot
+- Drop zeromq-4.2.5-skip-broken-clang-format.patch
+
 * Wed Apr 04 2018 Jajauma's Packages <jajauma@yandex.ru> - 4.2.5-2
 - Rebuild with cmake
 
