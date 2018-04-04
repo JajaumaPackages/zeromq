@@ -1,18 +1,16 @@
 Name:           zeromq
 Version:        4.2.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Software library for fast, message-based applications
 
 License:        LGPLv3
 URL:            http://zeromq.org
 Source0:        https://github.com/zeromq/libzmq/releases/download/v%{version}/zeromq-%{version}.tar.gz
+Patch0:         zeromq-4.2.5-skip-broken-clang-format.patch
 
 BuildRequires:  pkgconfig(libsodium)
 BuildRequires:  pkgconfig(openpgm-5.2)
-BuildRequires:  pkgconfig(krb5-gssapi)
-BuildRequires:  asciidoc
-BuildRequires:  xmlto
-BuildRequires:  chrpath
+BuildRequires:  cmake >= 2.8.12
 
 
 %description
@@ -44,27 +42,37 @@ Summary:        Utilities shipped with %{name}
 
 %prep
 %setup -q
+%patch0 -p1
 
 
 %build
-%configure \
-    --disable-silent-rules \
-    --disable-static \
-    --with-libgssapi_krb5 \
-    --with-libsodium \
-    --with-pgm
+mkdir Build
+pushd Build
+%{cmake} \
+    -DZEROMQ_CMAKECONFIG_INSTALL_DIR=%{_libdir}/cmake/ZeroMQ \
+    -DWITH_OPENPGM=ON \
+    -DWITH_LIBSODIUM=ON \
+    -DWITH_DOC=OFF ..
 make %{?_smp_mflags}
+popd
 
 
 %check
-make check
+pushd Build
+make test
+popd
 
 
 %install
 rm -rf %{buildroot}
+pushd Build
 %make_install
-find %{buildroot} -name '*.la' -delete
-chrpath -d %{buildroot}%{_bindir}/*
+popd
+
+# move pkgconfig to the proper place
+mv %{buildroot}/usr/lib/pkgconfig %{buildroot}%{_libdir}
+# don't install files twice
+rm -f %{buildroot}/usr/share/zmq/*.txt
 
 
 %post -p /sbin/ldconfig
@@ -82,9 +90,9 @@ chrpath -d %{buildroot}%{_bindir}/*
 %files devel
 %{_includedir}/*
 %{_libdir}/*.so
+%{_libdir}/*.a
 %{_libdir}/pkgconfig/libzmq.pc
-%{_mandir}/man3/*
-%{_mandir}/man7/*
+%{_libdir}/cmake/*
 
 
 %files utils
@@ -92,6 +100,9 @@ chrpath -d %{buildroot}%{_bindir}/*
 
 
 %changelog
+* Wed Apr 04 2018 Jajauma's Packages <jajauma@yandex.ru> - 4.2.5-2
+- Rebuild with cmake
+
 * Wed Apr 04 2018 Jajauma's Packages <jajauma@yandex.ru> - 4.2.5-1
 - Update to 4.2.5
 
